@@ -1,0 +1,14 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Copiar e instalar dependencias
+COPY etl/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar el código del ETL
+COPY etl/ ./etl/
+
+# Comando que se ejecuta al encender el contenedor
+# Asegúrate de haber creado el main_etl.py que orquesta todo
+CMD ["python", "etl/main_etl.py"]

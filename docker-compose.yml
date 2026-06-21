@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # 1. El proceso ETL que limpia los datos
+  etl:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.etl
+    volumes:
+      # Conecta la carpeta data al contenedor para que guarde la base de datos ahí
+      - ./data:/app/data 
+
+  # 2. La API que consulta la base de datos
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    volumes:
+      # La API también necesita leer la carpeta data para encontrar nba.db
+      - ./data:/app/data
+    ports:
+      - "8000:8000"
+    depends_on:
+      - etl # Espera a que el ETL termine de crear la base de datos
+
+  # 3. El Dashboard (Tu interfaz web)
+  dashboard:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dashboard
+    ports:
+      - "8501:8501"
+    environment:
+      # Le dice al Dashboard en qué dirección web interna está la API
+      - API_URL=http://api:8000 
+    depends_on:
+      - api # Espera a que la API esté lista para prenderse

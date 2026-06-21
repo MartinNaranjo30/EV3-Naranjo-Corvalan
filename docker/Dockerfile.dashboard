@@ -1,0 +1,14 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY dashboards/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY dashboards/ ./dashboards/
+
+# Exponer el puerto de Streamlit
+EXPOSE 8501
+
+# Comando para levantar la interfaz gráfica
+CMD ["streamlit", "run", "dashboards/app.py", "--server.port=8501", "--server.address=0.0.0.0"]
