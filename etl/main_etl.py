@@ -18,7 +18,7 @@ def ejecutar_pipeline():
         # 2. Transformación
         print("2. Transformando y limpiando datos...")
         
-        df_limpio = transformar(df_csv) 
+        df_limpio = transformar(df_csv, datos_api) 
         
         # 3. Carga
         print("3. Cargando datos en SQLite...")
