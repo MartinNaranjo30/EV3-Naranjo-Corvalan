@@ -27,7 +27,7 @@ Gracias a la contenerización, todo el ecosistema se compila, ejecuta el flujo E
 
 1. Clonar el repositorio:
    ```bash
-   git clone <URL_DE_TU_REPOSITORIO>
+   git clone https://github.com/MartinNaranjo30/EV3-Naranjo-Corvalan.git
    cd "Ev3 NBA"
 
 2. Levantar la infraestructura:
