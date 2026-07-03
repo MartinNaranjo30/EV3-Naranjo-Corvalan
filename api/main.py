@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 import sqlite3
 import pandas as pd
+import joblib
+from pydantic import BaseModel
+import os
 
 app = FastAPI(title = "API NBA")
 
@@ -33,3 +36,31 @@ def get_stats():
     "promedio_asistencias": round(df["AST"].mean(), 2),
     "promedio_rebotes": round(df["REB"].mean(), 2),
   }
+
+class JugadorStats(BaseModel):
+    PTS: float
+    AST: float
+    REB: float
+    STL: float
+    BLK: float
+
+
+@app.post("/predict")
+def predecir_rendimiento(stats: JugadorStats):
+    """
+    Recibe las estadísticas de un jugador y predice a qué tipo de temporada
+    corresponde su rendimiento usando el modelo de Machine Learning.
+    """
+    ruta_modelo = "models/modelo_nba.pkl"
+
+    if not os.path.exists(ruta_modelo):
+        return {"error": "El modelo no ha sido entrenado o no se encuentra en la ruta."}
+
+    modelo_cargado = joblib.load(ruta_modelo)
+    datos_entrada = [[stats.PTS, stats.AST, stats.REB, stats.STL, stats.BLK]]
+    prediccion = modelo_cargado.predict(datos_entrada)
+
+    return {
+        "mensaje": "Predicción exitosa",
+        "prediccion_temporada": prediccion[0]
+    }
