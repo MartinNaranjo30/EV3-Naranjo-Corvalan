@@ -26,4 +26,4 @@ jobs:
 
     - name: Ejecutar pruebas unitarias automatizadas
       run: |
-        python -m pytest tests/
+        python -m pytest
